@@ -93,12 +93,15 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        -- composer.removeScene("game")
-        -- composer.removeScene("correctTapScene")
-        -- composer.removeScene("incorrectTapScene")
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+        composer.removeScene("level_select")
+        composer.removeScene("level_complete")
+        composer.removeScene("level_1")
+        composer.removeScene("level_2")
+        composer.removeScene("level_3")
+
 
     end
 end

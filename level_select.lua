@@ -18,6 +18,18 @@ local widget = require("widget")
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
+-- alex = 0;
+-- bubble = 0;
+-- bubbleCount = 0;
+-- janken = 0;
+-- jankenHand = 0;
+-- secondsLeft = 4
+-- countDownTimer = 0;
+-- decisionTimer = 0;
+-- timerText = "";
+-- messageText = "";
+-- scoreText = "";
+
 alexScore = 0;
 currentLevel = 0;
 enemyScore = 0;
@@ -66,6 +78,25 @@ end
 function updateScoreBoard()
     scoreText.text = string.format("ALEX: %01d  LEVEL: %01d  ENEMY: %01d", alexScore, currentLevel, enemyScore)
 end
+
+function setSpriteHandSequence(sprite, nameOfSprite, choice)
+    print("nameOfSprite: " .. nameOfSprite)
+    print("choice: " .. choice)
+    if(choice == 0) then
+        sprite:setSequence(nameOfSprite .. "_rock");
+        sprite:play();
+        return sprite
+    elseif(choice == 1) then
+        sprite:setSequence(nameOfSprite .. "_scissor");
+        sprite:play();
+        return sprite
+    else
+        sprite:setSequence(nameOfSprite .. "_paper");
+        sprite:play();
+        return sprite
+    end
+end
+
 
 -- -----------------------------------------------------------------------------------
 -- Scene event functions

@@ -19,6 +19,17 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
+-- startButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the menu scene to the game scene
+local function exitToMenu(event)
+    if ("ended" == event.phase) then
+        composer.gotoScene("menu")
+    end
+end
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -32,22 +43,25 @@ local widget = require("widget")
 function scene:create( event )
 
     local sceneGroup = self.view
-    -- Code here runs when the scene is first created but has not yet appeared on screen  
+    -- Code here runs when the scene is first created but has not yet appeared on screen   
 
-    -- Game Background
-    local menuBG = display.newImage("images/bg.png")
-    menuBG.width = display.contentWidth
-    menuBG.height = display.pixelWidth    
-
-  
+    local backToMenuButton = widget.newButton({    
+            id = "backToMenuButton",
+            label = "Menu",    
+            width = 100,
+            height = 20,
+            fontSize = 10,
+            defaultFile = "images/button.png",
+            onEvent = exitToMenu
+        } )   
 
     -- Positioning all objects on the screen
-    menuBG.x = display.contentCenterX
-    menuBG.y = display.contentCenterY  
+    backToMenuButton.x = display.contentCenterX
+    backToMenuButton.y = display.contentCenterY+(display.contentCenterY/1.9)
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
-    sceneGroup:insert( menuBG )
+    sceneGroup:insert( backToMenuButton )
     
 end
 
@@ -84,6 +98,7 @@ function scene:hide( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is on screen (but is about to go off screen)
+        composer.removeScene("menu")
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
