@@ -5,10 +5,9 @@
 -- Authors: Daniel Burris and Jairo Arreola
 --
 -- This scene allows the user to select what level he wants to play, it features 4 buttons,
--- each button simply pushes the user into the scene that he asked to go to.
+-- each button simply pushes the user into the scene that he asked to go to (levels 1-3 or menu)
 -----------------------------------------------------------------------------------------
 
--- Composer object is used for the creation and manipulation of scenes
 local composer = require("composer")
 
 -- Scene Creation / Manipulation
@@ -24,7 +23,8 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- These global variables are used to track score in each level as well as our current level
+-- These global variables are used to track score in each level as well as our current level,
+-- they are the text values displayed above the sprites and backdrops in every level.
 alexScore = 0;
 currentLevel = 0;
 enemyScore = 0;
@@ -35,7 +35,7 @@ enemyScore = 0;
 --      output: none
 --      
 --      This function resets the scores for both the player and the enemy and tracks the 
---      current level we're in
+--      current level we're in, it is called every time a new level is entered. 
 function resetScoreboard(level)
     alexScore = 0;
     currentLevel = level;
@@ -102,15 +102,15 @@ function updateScoreBoard()
 end
 
 
--- updateScoreBoard()
+-- setSpriteHandSequence()
 --      input: sprite, nameOfSprite, choice
 --      output: sprite
 --
---      This global function updates the score board shown at the top of the game scene. It is 
---      updated with simple string.format functionality.
+--      This global function is called at the end of the 5 or 3 second timer in which the player is allowed
+--      to decide his actions. It uses the sprite object, name of sprite, and choice of the sprite to
+--      draw either a rock, paper, or scissor hand for the user to visually see what was played that round.
+--      0 == rock, 1 == scissor, 2 == paper
 function setSpriteHandSequence(sprite, nameOfSprite, choice)
-    print("nameOfSprite: " .. nameOfSprite)
-    print("choice: " .. choice)
     if(choice == 0) then
         sprite:setSequence(nameOfSprite .. "_rock");
         sprite:play();
@@ -142,7 +142,8 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen  
 
-    -- This is the text that represents the scoreboard to the player
+    -- This is the text that represents the scoreboard to the player, not visible in this scene, but is
+    -- a global text that is shown in levels 1-3 scenes.
     scoreText = display.newText(" ", 0, 0, native.systemFont)
     scoreText:setTextColor(235, 235, 235)
 
@@ -224,7 +225,7 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to the menu scene
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:show( event )
 
     local sceneGroup = self.view

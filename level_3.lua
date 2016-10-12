@@ -6,7 +6,7 @@
 --
 -- This is level 3 of the rock-paper-scissors game. It is identical to the level 1,2 lua
 -- files except for the fact that it pushes us into level complete upon victory and uses the level
--- 3 sprites, background, and difficulty (3000ms decision time).
+-- 3 sprites, background, and difficulty (3000ms decision time). It is also a BO5 victory.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -33,11 +33,11 @@ local jankenHand = 0 -- This variable represents the janken hand sprite, his han
 -- so that the countdown timer is between 3 < x < 3.99 instead of 2 < x < 2.99
 local secondsLeft = 4
 local countDownTimer = 0 -- timer used at the beginning of a round, lasts 3 seconds
-local decisionTimer = 0 -- timer used when player is deciding what to play, lasts 5000ms on this level
+local decisionTimer = 0 -- timer used when player is deciding what to play, lasts 3000ms on this level
 local timerText -- represents the text for the countDownTimer
 local messageText -- text displayed when the native.showalert appears at the end of each round
 local startGame = false -- variable used to signal the start of the game after the 3 second countDownTimer
-local startGameTimer -- timer used to 
+local startGameTimer -- timer used to keep track of how long the level has lasted
 local winner = " " -- variable used to see if a winner has been found yet
 
 -- nextLevel()
@@ -158,17 +158,14 @@ local function findWinner(player, enemy)
     -- This is not checking for the winner of the round, but for the winner of the level, it decides whether
     -- alex beat the level, lost the level, or needs to keep playing
     if(alexScore == 3) then -- wins the round
-        print("winner of level is Alex")
         winner = "Alex";
         timer.cancel( startGameTimer )
         native.showAlert("Winner!", "Go to next level", {"level complete"}, nextLevel)
     elseif (enemyScore == 3) then -- loses the round
-        print("Winner of level is Enemy")
         winner = "Enemy";
         timer.cancel( startGameTimer )
         native.showAlert("Game Over!", "You lost", {"Exit to Menu"}, exitToMenu)
     else -- needs to keep playing
-        print("Game is still going on")
         winner = " ";
         native.showAlert("Game!", messageText.text, {"Resume"}, contGame)
     end

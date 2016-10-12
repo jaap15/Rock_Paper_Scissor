@@ -52,7 +52,7 @@ function scene:create( event )
     local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
     local bg = display.newImage (bgSheet, 4);
 
-    -- Text congratulating the player for winning!
+    -- Text congratulating the player for winning! Thanking them for playing! and giving credit to sprite sheet makers
     local msg1 = display.newText("Congratulations! You defeated Janken!", display.contentCenterX, display.contentCenterY-(display.contentCenterY/1.1))
     local msg2 = display.newText("Thanks for playing!", display.contentCenterX, display.contentCenterY-(display.contentCenterY/1.2))
     local msg3 = display.newText("Credit for all sprites used:", display.contentCenterX, display.contentCenterY-(display.contentCenterY/2.2))

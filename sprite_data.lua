@@ -14,8 +14,11 @@
 -- http://www.spriters-resource.com/master_system/alexkiddmw/sheet/10911/
 -- http://www.spriters-resource.com/master_system/alexkiddmw/sheet/51709/
 -----------------------------------------------------------------------------------------
-local SheetInfo = {}
+local SheetInfo = {} -- Creating a table to hold all of our animation options
 
+-- Sprite definitions for background
+-- All background images are contained in one big .png file. So we select which background we want
+-- by defining the origin of the background and grabbing the width of height of it. 
 SheetInfo.bgOptions =
 {
     frames = {
@@ -51,7 +54,9 @@ SheetInfo.bgOptions =
      }
 }
 
----------- ALEX KIDD ---------------------------------
+-- Sprite definitions for Alex Kidd
+-- The Alex Kidd sprite sheet contains alot of information in it not all of which we need, this options sheet breaks 
+-- down all the frames we need into an easy to read table. 
 SheetInfo.alexOptions =
 {
     frames = {
@@ -143,7 +148,9 @@ SheetInfo.alexOptions =
      }
 }
 
--- Create animation sequence for animation 
+-- Animation definitions for Alex Kidd
+-- Here we are defining which frames are to be played in success to form a successful animation sequence
+-- and defining how much time is displayed between frame changes
 SheetInfo.alexSequenceData = {
 
     {name = "alex_normal", start=1 , count = 4, time = 800}, 
@@ -155,7 +162,9 @@ SheetInfo.alexSequenceData = {
 
 }
 
----------- JANKEN ---------------------------------
+-- Sprite definitions for Janken
+-- The enemy (Janken) sprite sheet contains alot of information in it not all of which we need, this options sheet breaks 
+-- down all the frames we need into an easy to read table. 
 SheetInfo.jankenOptions =
 {
     frames = {
@@ -291,7 +300,9 @@ SheetInfo.jankenOptions =
      }
 }
 
--- Create animation sequence janken
+-- Animation definitions for Janken
+-- Here we are defining which frames are to be played in success to form a successful animation sequence
+-- and defining how much time is displayed between frame changes
 SheetInfo.jankenSequenceData = {
 
     --{name = "boss_flap", frames={7,8}, time = 500},
@@ -317,7 +328,9 @@ SheetInfo.jankenSequenceData = {
 
 }
 
--- Create animation sequence bubble
+-- Animation definitions for bubble
+-- Here we are defining which frames are to be played in success to form a successful animation sequence
+-- and defining how much time is displayed between frame changes
 SheetInfo.bubbleSequenceData = {
 
     {name = "bubble_rock", frames={10}}, 
@@ -326,26 +339,56 @@ SheetInfo.bubbleSequenceData = {
 
 }
 
+--  SheetInfo:getBgOption()
+--      input: none
+--      output: bgOptions
+--
+--      This function returns the background options to the caller
 function SheetInfo:getBgOptions()
     return self.bgOptions;
 end
 
+--  SheetInfo:getAlexOptions()
+--      input: none
+--      output: alexOptions
+--
+--      This function returns the Alex Kidd options to the caller
 function SheetInfo:getAlexOptions()
     return self.alexOptions;
 end
 
+--  SheetInfo:getAlexSequenceData()
+--      input: none
+--      output: alexSequenceData
+--
+--      This function returns the Alex Kidd sequence data to the caller
 function SheetInfo:getAlexSequenceData()
     return self.alexSequenceData;
 end
 
+--  SheetInfo:getJankenOptions()
+--      input: none
+--      output: jankenOptions
+--
+--      This function returns the Janken options to the caller
 function SheetInfo:getJankenOptions()
     return self.jankenOptions;
 end
 
+--  SheetInfo:getJankenSequenceData()
+--      input: none
+--      output: jankenSequenceData
+--
+--      This function returns the Janekn sequence data to the caller
 function SheetInfo:getJankenSequenceData()
     return self.jankenSequenceData;
 end
 
+--  SheetInfo:getBubbleSequenceData()
+--      input: none
+--      output: bubbleSequenceData
+--
+--      This function returns the bubble sequence data to the caller
 function SheetInfo:getBubbleSequenceData()
     return self.bubbleSequenceData;
 end

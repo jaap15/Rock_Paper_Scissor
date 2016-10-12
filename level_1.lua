@@ -6,7 +6,7 @@
 --
 -- This is level 1 of the rock-paper-scissors game. It is identical to the level 2,3 lua
 -- files except for the fact that it pushes us into level 2 upon victory and uses the level
--- 1 sprites, background, and difficulty (5000ms decision time).
+-- 1 sprites, background, and difficulty (5000ms decision time). It is also a BO3 victory.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -21,11 +21,11 @@ local sheetName = require("sprite_data")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- These local variables are used to keep track of which frame we're on in animation sequences
+-- These local variables are used to keep track of sprites, player choices, timer values, messages to be displayed, and states of the game.
 
 local alex = 0 -- This variable represents the alex sprite
 local bubble = 0 -- This variable represents the bubble sprite
-local bubbleCount = 0 -- This variables tracks which option the user selected from alex's thought-bubble (rock,paper, scissors)
+local bubbleCount = 0 -- This variables tracks which option the user selected from alex's thought-bubble (rock,paper,scissors)
 local janken = 0 -- This variable represents the janken sprite
 local jankenHand = 0 -- This variable represents the janken hand sprite, his hand and body are seperate sprites
 
@@ -37,7 +37,7 @@ local decisionTimer = 0 -- timer used when player is deciding what to play, last
 local timerText -- represents the text for the countDownTimer
 local messageText -- text displayed when the native.showalert appears at the end of each round
 local startGame = false -- variable used to signal the start of the game after the 3 second countDownTimer
-local startGameTimer -- timer used to 
+local startGameTimer -- timer used to keep track of how long the level has lasted
 local winner = " " -- variable used to see if a winner has been found yet
 
 
@@ -64,7 +64,6 @@ local function exitToMenu(event)
     scoreText.text = " "
     composer.gotoScene("menu")
 end
-
 
 -- updateTime()
 --      input: none
@@ -120,7 +119,7 @@ end
 --      output: none
 --
 --      This function simply checks for all possible outcomes of the R-P-S game. Assuming the following
---      rules: R > S, P > R, S > P. Player and Enemy are variables that track was option they played 
+--      rules: R > S, P > R, S > P. Player and Enemy are variables that track what hand they played 
 --      (rock, paper, or scissors)
 local function findWinner(player, enemy)
     
@@ -157,19 +156,16 @@ local function findWinner(player, enemy)
     end
 
     -- This is not checking for the winner of the round, but for the winner of the level, it decides whether
-    -- alex beat the level, lost the level, or needs to keep playing
+    -- alex beat the level, lost the level, or needs to keep playing based on rulse of the leves (BO3 or BO5)
     if(alexScore == 2) then -- wins the round
-        print("winner of level is Alex")
         winner = "Alex";
         timer.cancel( startGameTimer )
         native.showAlert("Winner!", "Go to next level", {"level 2"}, nextLevel)
     elseif (enemyScore == 2) then -- loses the round
-        print("Winner of level is Enemy")
         winner = "Enemy";
         timer.cancel( startGameTimer )
         native.showAlert("Game Over!", "You lost", {"Exit to Menu"}, exitToMenu)
     else -- needs to keep playing
-        print("Game is still going on")
         winner = " ";
         native.showAlert("Game!", messageText.text, {"Resume"}, contGame)
     end
@@ -234,7 +230,7 @@ end
 --      output: none
 --
 --      This function is called at the end of our 3s countDownTimer and allows the bubble to be clickable
---      and calls the play function which begins our animations. 
+--      and calls the play function which begins our shake animations. 
 local function checkStartGame()
 
     if(startGame == true and winner == " ") then

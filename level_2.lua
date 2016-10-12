@@ -6,7 +6,7 @@
 --
 -- This is level 2 of the rock-paper-scissors game. It is identical to the level 1,3 lua
 -- files except for the fact that it pushes us into level 3 upon victory and uses the level
--- 2 sprites, background, and difficulty (5000ms decision time).
+-- 2 sprites, background, and difficulty (5000ms decision time). It is also a BO3 victory.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
@@ -37,7 +37,7 @@ local decisionTimer = 0 -- timer used when player is deciding what to play, last
 local timerText -- represents the text for the countDownTimer
 local messageText -- text displayed when the native.showalert appears at the end of each round
 local startGame = false -- variable used to signal the start of the game after the 3 second countDownTimer
-local startGameTimer -- timer used to 
+local startGameTimer -- timer used to keep track of how long the level has lasted
 local winner = " " -- variable used to see if a winner has been found yet
 
 -- nextLevel()
@@ -158,17 +158,14 @@ local function findWinner(player, enemy)
     -- This is not checking for the winner of the round, but for the winner of the level, it decides whether
     -- alex beat the level, lost the level, or needs to keep playing
     if(alexScore == 2) then -- wins the round
-        print("winner of level is Alex")
         winner = "Alex";
         timer.cancel( startGameTimer )
         native.showAlert("Winner!", "Go to next level", {"level 3"}, nextLevel)
     elseif (enemyScore == 2) then -- loses the round
-        print("Winner of level is Enemy")
         winner = "Enemy";
         timer.cancel( startGameTimer )
         native.showAlert("Game Over!", "You lost", {"Exit to Menu"}, exitToMenu)
     else -- needs to keep playing
-        print("Game is still going on")
         winner = " ";
         native.showAlert("Game!", messageText.text, {"Resume"}, contGame)
     end

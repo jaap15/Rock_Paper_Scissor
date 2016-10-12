@@ -5,10 +5,10 @@
 -- Authors: Daniel Burris and Jairo Arreola
 --
 -- This scene is what the user first sees upon starting the game, it simply contains a 
--- button which takes them to the level select menu and shows the authors of the game.
+-- background, button which takes them to the level select menu, and shows the authors 
+-- of the game.
 -----------------------------------------------------------------------------------------
 
--- Composer object is used for the creation and manipulation of scenes
 local composer = require("composer")
 
 -- Scene Creation / Manipulation
@@ -89,8 +89,9 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the level select, level select, and level 1-3 scenes when its
---      in the menu scene
+--      This function destroys the level select, level complete, and level 1-3 scenes when its
+--      in the menu scene, this is to prevent any unseen errors with timers or delays from executing
+--      while in the menu scene.
 function scene:show( event )
 
     local sceneGroup = self.view
