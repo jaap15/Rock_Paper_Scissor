@@ -31,7 +31,7 @@ local jankenHand = 0 -- This variable represents the janken hand sprite, his han
 
 -- Local variable used to start the countdown timer, its set to countdowntimerValue + 1
 -- so that the countdown timer is between 3 < x < 3.99 instead of 2 < x < 2.99
-local secondsLeft = 1
+local secondsLeft = 4
 local countDownTimer = 0 -- timer used at the beginning of a round, lasts 3 seconds
 local decisionTimer = 0 -- timer used when player is deciding what to play, lasts 5000ms on this level
 local timerText -- represents the text for the countDownTimer
@@ -199,7 +199,7 @@ end
 --      This function starts the 5000ms timer for level 1 and begins the animations for both alex and
 --      janken. 
 local function play()
-    decisionTimer = timer.performWithDelay( 100, checkHands, 1 )
+    decisionTimer = timer.performWithDelay( 5000, checkHands, 1 )
     alex:setSequence ("alex_shake");
     alex:play();
 
