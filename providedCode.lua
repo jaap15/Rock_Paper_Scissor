@@ -1,9 +1,20 @@
-display.setStatusBar( display.HiddenStatusBar )
-
+-----------------------------------------------------------------------------------------
+--
+-- providedCode.lua
+--
+-- Code provided by: Haeyong Chung
+--
+-- This lua file contains all the animation seqeunces, resolutions, and sprite configurations
+-- for the project. We chose to make this file seperate from the main.lua because it 
+-- not only keeps the main.lua simple and clean, but it helps overall organization of the 
+-- program (seperates our code from provided code).
+--
+-- All credit for spritesheets and background images goes to SEGA's Alex Kidd, found below
+-- http://www.spriters-resource.com/master_system/alexkiddmw/sheet/51712/
+-- http://www.spriters-resource.com/master_system/alexkiddmw/sheet/10911/
+-- http://www.spriters-resource.com/master_system/alexkiddmw/sheet/51709/
+-----------------------------------------------------------------------------------------
 local widget = require('widget')
-
-
-
 
   -----------------------------background--------------------------------
    local options =
@@ -173,10 +184,3 @@ play();
 
 --Shake for a while before revealing the hand
 local t = timer.performWithDelay (3000, shoot, 1);
-
-
-
-
-
-
-

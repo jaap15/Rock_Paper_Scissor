@@ -3,8 +3,12 @@
 -- menu.lua
 --
 -- Authors: Daniel Burris and Jairo Arreola
+--
+-- This scene is what the user first sees upon starting the game, it simply contains a 
+-- button which takes them to the level select menu and shows the authors of the game.
 -----------------------------------------------------------------------------------------
 
+-- Composer object is used for the creation and manipulation of scenes
 local composer = require("composer")
 
 -- Scene Creation / Manipulation
@@ -23,7 +27,7 @@ local widget = require("widget")
 --      input: none
 --      output: none
 --      
---      This function just switches from the menu scene to the game scene
+--      This function just switches from the menu scene to the level select scene
 local function startButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("level_select")
@@ -53,7 +57,7 @@ function scene:create( event )
     -- Text to display developers of the game
     authors = display.newText("by Daniel Burris and Jairo Arreola", display.contentCenterX, display.contentCenterY+(display.contentCenterY/1.2))
 
-    -- Creating the start button, sends us from the menu scene to the game scene
+    -- Creating the start button, sends us from the menu scene to the level select scene
     local startButton = widget.newButton({    
             id = "startButton",
             label = "Start",    
@@ -85,7 +89,8 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to the menu scene
+--      This function destroys the level select, level select, and level 1-3 scenes when its
+--      in the menu scene
 function scene:show( event )
 
     local sceneGroup = self.view

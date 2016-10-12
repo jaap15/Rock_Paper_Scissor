@@ -3,43 +3,61 @@
 -- level_2.lua
 --
 -- Authors: Daniel Burris and Jairo Arreola
+--
+-- This is level 2 of the rock-paper-scissors game. It is identical to the level 1,3 lua
+-- files except for the fact that it pushes us into level 3 upon victory and uses the level
+-- 2 sprites, background, and difficulty (5000ms decision time).
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
-
--- Scene Creation / Manipulation
 local scene = composer.newScene()
-
--- Widget Creation / Manipulation
--- Used for buttons, sliders, radio buttons
 local widget = require("widget")
 
+-- Loading our sprite_data.lua file 
 local sheetName = require("sprite_data")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
-local alex = 0;
-local bubble = 0;
-local bubbleCount = 0;
-local janken = 0;
-local jankenHand = 0;
-local secondsLeft = 4
-local countDownTimer = 0;
-local decisionTimer = 0;
-local timerText;
-local messageText;
-local startGame = false
-local startGameTimer;
-local winner = " ";
 
+-- These local variables are used to keep track of which frame we're on in animation sequences
+
+local alex = 0 -- This variable represents the alex sprite
+local bubble = 0 -- This variable represents the bubble sprite
+local bubbleCount = 0 -- This variables tracks which option the user selected from alex's thought-bubble (rock,paper, scissors)
+local janken = 0 -- This variable represents the janken sprite
+local jankenHand = 0 -- This variable represents the janken hand sprite, his hand and body are seperate sprites
+
+-- Local variable used to start the countdown timer, its set to countdowntimerValue + 1
+-- so that the countdown timer is between 3 < x < 3.99 instead of 2 < x < 2.99
+local secondsLeft = 1
+local countDownTimer = 0 -- timer used at the beginning of a round, lasts 3 seconds
+local decisionTimer = 0 -- timer used when player is deciding what to play, lasts 5000ms on this level
+local timerText -- represents the text for the countDownTimer
+local messageText -- text displayed when the native.showalert appears at the end of each round
+local startGame = false -- variable used to signal the start of the game after the 3 second countDownTimer
+local startGameTimer -- timer used to 
+local winner = " " -- variable used to see if a winner has been found yet
+
+-- nextLevel()
+--      input: none
+--      output: none
+--      
+--      This function resets the scores for both the player and the enemy and pushes us
+--      into the next level. Called when alex beats the enemy.
 local function nextLevel(event)
     resetScoreboard(3)
     scoreText.text = " "
-    composer.gotoScene("level_3")
+    composer.gotoScene("level_3") -- going to level 3
 end
 
+-- exitToMenu()
+--      input: none
+--      output: none
+--      
+--      This function resets the scores for both the player and the enemy and pushes us 
+--      into the menu. Called when alex loses to the enemy.
 local function exitToMenu(event)
     resetScoreboard(0)
     scoreText.text = " "
@@ -51,9 +69,8 @@ end
 --      input: none
 --      output: none
 --
---      This function is our 3 second countdown timer. It is called every second and updates
---      the text in the middle of the scene when secondsLeft is above 0. When there is no time left
---      we start the game by calling play().
+--      This function is called when we start the countdown for each round. It draws the 3-2-1
+--      countdown timer in the middle of the screen prior to the user selecting his R-P-S for Alex.
 local function updateTime()
 
     -- If countdown timer is still running decrement countdown timer and display it
@@ -73,20 +90,43 @@ local function updateTime()
     end
 end
 
+-- startCountdown()
+--      input: none
+--      output: none
+--
+--      This function starts our countdown timer for the beginning of the round. It initates the enemy
+--      animation sequence and hides jankenHand (since he hasn't made a decision yet)
 local function startCountdown()
     jankenHand.isVisible = false
     janken:setSequence("enemy2_shake");
     countDownTimer = timer.performWithDelay( 1000, updateTime, 5 )
 end
 
+-- contGame()
+--      input: none
+--      output: none
+--
+--      This function is called after the first round of a level completes, it resumes the start game timer
+--      and does not reset the scoreboard and begins the countdown for the next round.
 local function contGame(event)
     startGame = false
     timer.resume( startGameTimer )
     startCountdown()
 end
 
+-- findWinner()
+--      input: player, enemy
+--      output: none
+--
+--      This function simply checks for all possible outcomes of the R-P-S game. Assuming the following
+--      rules: R > S, P > R, S > P. Player and Enemy are variables that track was option they played 
+--      (rock, paper, or scissors)
 local function findWinner(player, enemy)
+    
+    -- No Winner declared yet
     messageText.isVisible = false
+
+    -- This big if statement is simply checking for all possibilities of Alex winning, enemy winning, or a tie game
     if (player == 0 and enemy == 1) then
         alexScore = alexScore + 1
         updateScoreBoard()
@@ -115,23 +155,31 @@ local function findWinner(player, enemy)
         messageText.text = "Tie!"
     end
 
-    if(alexScore > 1 and enemyScore < 2 ) then
+    -- This is not checking for the winner of the round, but for the winner of the level, it decides whether
+    -- alex beat the level, lost the level, or needs to keep playing
+    if(alexScore == 2) then -- wins the round
         print("winner of level is Alex")
         winner = "Alex";
         timer.cancel( startGameTimer )
         native.showAlert("Winner!", "Go to next level", {"level 3"}, nextLevel)
-    elseif (alexScore < 2 and enemyScore > 1) then
+    elseif (enemyScore == 2) then -- loses the round
         print("Winner of level is Enemy")
         winner = "Enemy";
         timer.cancel( startGameTimer )
         native.showAlert("Game Over!", "You lost", {"Exit to Menu"}, exitToMenu)
-    else
+    else -- needs to keep playing
         print("Game is still going on")
         winner = " ";
         native.showAlert("Game!", messageText.text, {"Resume"}, contGame)
     end
 end
 
+-- checkHands()
+--      input: none
+--      output: none
+--
+--      This function checks to see what hand alex and janken played. Alex's hand is based on what 
+--      the user chose, janken's hand is random.
 local function checkHands()
     print("time up ")
     bubble.isVisible = false
@@ -142,22 +190,31 @@ local function checkHands()
     jankenHand = setSpriteHandSequence(jankenHand, "enemy".. currentLevel, enemyChoice)
     janken:setSequence( "enemy2_set" )
     jankenHand.isVisible = true
-    findWinner(bubbleCount, enemyChoice)
+    findWinner(bubbleCount, enemyChoice)  -- Passing both hands to the findWinner function
 end
 
+-- play()
+--      input: none
+--      output: none
+--
+--      This function starts the 5000ms timer for level 1 and begins the animations for both alex and
+--      janken. 
 local function play()
-    decisionTimer = timer.performWithDelay( 5000, checkHands, 1 )
+    decisionTimer = timer.performWithDelay( 100, checkHands, 1 )
     alex:setSequence ("alex_shake");
     alex:play();
 
     janken:setSequence("enemy2_shake");
     janken:play();
-
-    
 end
 
+-- bubbleTapListener()
+--      input: none
+--      output: none
+--
+--      This function is the tap listener for our bubble above alex, it is affiliated with a number 0-2
+--      which corresponds to rock = 0, scissors = 1, paper = 2
 local function bubbleTapListener( event )
-    print("BubbleCount before ++: " .. bubbleCount)
     bubbleCount = bubbleCount + 1
     if(bubbleCount == 1) then
         bubble:setSequence("bubble_scissor");
@@ -173,6 +230,12 @@ local function bubbleTapListener( event )
 
 end
 
+-- checkStartGame()
+--      input: none
+--      output: none
+--
+--      This function is called at the end of our 3s countDownTimer and allows the bubble to be clickable
+--      and calls the play function which begins our animations. 
 local function checkStartGame()
 
     if(startGame == true and winner == " ") then
@@ -197,38 +260,38 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen  
  
-    -----------------------------background--------------------------------
+    -- Game Background for level 2
     local bgOptions = sheetName:getBgOptions()
     local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
     local bg = display.newImage (bgSheet, 2);
-    print(bgOptions.frames[1].height)
 
-    -----------------------------Alex Kidd--------------------------------
+    -- Creating Alex spriteSheet and sequence data
     local alexOptions = sheetName:getAlexOptions()
     local alexSequenceData = sheetName:getAlexSequenceData()
     local alexSheet = graphics.newImageSheet( "images/alex.png", alexOptions );
     alex = display.newSprite (alexSheet, alexSequenceData); 
 
-    -----------------------------Bubble--------------------------------
+    -- Creating bubble sprite and sequence data
     local bubbleSequenceData = sheetName:getBubbleSequenceData()
     bubble = display.newSprite (alexSheet, bubbleSequenceData);
     bubble:addEventListener( "tap", bubbleTapListener )
 
-    -----------------------------Janken--------------------------------
+    -- Creating Janken sprite and sequence data
     local jankenOptions = sheetName:getJankenOptions()
     local jankenSequenceData = sheetName:getJankenSequenceData()
     local jankenSheet = graphics.newImageSheet( "images/enemy.png", jankenOptions );
     janken = display.newSprite (jankenSheet, jankenSequenceData);
     janken:setSequence("enemy2_shake");
 
+    -- Creating Janken Hand sprite and sequence data
     jankenHand = display.newSprite (jankenSheet, jankenSequenceData);
     jankenHand:setSequence("enemy2_scissor");
 
-
-    -- This is the countdown timer text seen after pressing the ready button at the beginning
+    -- Creating the countdown timer text seen before a round starts
     timerText = display.newText(" ", 0, 0, native.systemFont, 30)
     timerText:setTextColor(0, 0, 0)
 
+    -- Creating the text that is seen at the end of a round (outcome of round)
     messageText = display.newText(" ", 0, 0, native.systemFont, 30)
     messageText:setTextColor(0, 0, 0)
 
@@ -250,7 +313,7 @@ function scene:create( event )
     messageText.x = display.contentCenterX     
     messageText.y = display.contentCenterY
 
-    -- Setting Anchor
+    -- Setting Anchor point for all sprites
     alex.anchorX = 0; 
     alex.anchorY = 1; 
     bubble.anchorX = 0; 
@@ -280,7 +343,8 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to the menu scene
+--      This function defaults our bubble back to rock and hides all sprites since the round hasn't started yet,
+--      It begins the startCountdown timer and begins the game
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -297,7 +361,6 @@ function scene:show( event )
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
         startCountdown()
-        -- countDownTimer = timer.performWithDelay( 1000, updateTime, 5 )
         startGameTimer = timer.performWithDelay(100, checkStartGame, -1)
 
     end

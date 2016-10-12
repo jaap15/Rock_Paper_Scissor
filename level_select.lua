@@ -3,8 +3,12 @@
 -- level_select.lua
 --
 -- Authors: Daniel Burris and Jairo Arreola
+--
+-- This scene allows the user to select what level he wants to play, it features 4 buttons,
+-- each button simply pushes the user into the scene that he asked to go to.
 -----------------------------------------------------------------------------------------
 
+-- Composer object is used for the creation and manipulation of scenes
 local composer = require("composer")
 
 -- Scene Creation / Manipulation
@@ -14,55 +18,73 @@ local scene = composer.newScene()
 -- Used for buttons, sliders, radio buttons
 local widget = require("widget")
 
+
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
--- alex = 0;
--- bubble = 0;
--- bubbleCount = 0;
--- janken = 0;
--- jankenHand = 0;
--- secondsLeft = 4
--- countDownTimer = 0;
--- decisionTimer = 0;
--- timerText = "";
--- messageText = "";
--- scoreText = "";
 
+-- These global variables are used to track score in each level as well as our current level
 alexScore = 0;
 currentLevel = 0;
 enemyScore = 0;
 
+
+-- resetScoreboard()
+--      input: level
+--      output: none
+--      
+--      This function resets the scores for both the player and the enemy and tracks the 
+--      current level we're in
 function resetScoreboard(level)
     alexScore = 0;
     currentLevel = level;
     enemyScore = 0;
 end
 
+-- levelOneButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches us from the level select scene to the level 1 scene
 local function levelOneButtonEvent(event)
     if ("ended" == event.phase) then
-        resetScoreboard(1)
+        resetScoreboard(1)  -- Resetting scoreboard and updating current level
         updateScoreBoard()
         composer.gotoScene("level_1")
     end
 end
 
+-- levelTwoButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches us from the level select scene to the level 2 scene
 local function levelTwoButtonEvent(event)
     if ("ended" == event.phase) then
-        resetScoreboard(2)
+        resetScoreboard(2) -- Resetting scoreboard and updating current level
         updateScoreBoard()
         composer.gotoScene("level_2")
     end
 end
 
+-- levelThreeButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches us from the level select scene to the level 3 scene
 local function levelThreeButtonEvent(event)
     if ("ended" == event.phase) then
-        resetScoreboard(3)
+        resetScoreboard(3) -- Resetting scoreboard and updating current level
         composer.gotoScene("level_3")
     end
 end
 
+-- returnButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches us from the level select scene to the menu scene
 local function returnButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("menu")
@@ -73,12 +95,19 @@ end
 --      input: none
 --      output: none
 --
---      This global function updats the score board shown at the top of the game scene. It is 
+--      This global function updates the score board shown at the top of the game scene. It is 
 --      updated with simple string.format functionality.
 function updateScoreBoard()
     scoreText.text = string.format("ALEX: %01d  LEVEL: %01d  ENEMY: %01d", alexScore, currentLevel, enemyScore)
 end
 
+
+-- updateScoreBoard()
+--      input: sprite, nameOfSprite, choice
+--      output: sprite
+--
+--      This global function updates the score board shown at the top of the game scene. It is 
+--      updated with simple string.format functionality.
 function setSpriteHandSequence(sprite, nameOfSprite, choice)
     print("nameOfSprite: " .. nameOfSprite)
     print("choice: " .. choice)
@@ -122,6 +151,7 @@ function scene:create( event )
     menuBG.width = display.contentWidth
     menuBG.height = display.pixelWidth    
 
+    -- Creating the levelOneButton button, sends us from the level_select scene to the level_1 scene
     local levelOneButton = widget.newButton({    
         id = "levelOneButton",
         label = "Level 1",    
@@ -132,6 +162,7 @@ function scene:create( event )
         onEvent = levelOneButtonEvent
     } )  
 
+    -- Creating the levelTwoButton button, sends us from the level_select scene to the level_2 scene
     local levelTwoButton = widget.newButton({    
         id = "levelTwoButton",
         label = "Level 2",    
@@ -142,6 +173,7 @@ function scene:create( event )
         onEvent = levelTwoButtonEvent
     } ) 
 
+    -- Creating the levelThreeButton button, sends us from the level_select scene to the level_3 scene
     local levelThreeButton = widget.newButton({    
         id = "levelThreeButton",
         label = "Level 3",    
@@ -152,6 +184,7 @@ function scene:create( event )
         onEvent = levelThreeButtonEvent
     } )
 
+    -- Creating the returnButton button, sends us from the level_select scene to the menu scene
     local returnButton = widget.newButton({    
         id = "returnButton",
         label = "Return to Menu",    

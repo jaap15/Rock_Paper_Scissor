@@ -3,27 +3,29 @@
 -- level_complete.lua
 --
 -- Authors: Daniel Burris and Jairo Arreola
+--
+-- This is level complete scene, it is only reachable by successfully beating the boss level
+-- (level 3). It is more of a congratulations screen than a level as it appears after the 
+-- player has beaten the game.
 -----------------------------------------------------------------------------------------
 
 local composer = require("composer")
-
--- Scene Creation / Manipulation
 local scene = composer.newScene()
-
--- Widget Creation / Manipulation
--- Used for buttons, sliders, radio buttons
 local widget = require("widget")
+
+-- Loading our sprite_data.lua file 
+local sheetName = require("sprite_data")
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- startButtonEvent()
+-- exitToMenu()
 --      input: none
 --      output: none
 --      
---      This function just switches from the menu scene to the game scene
+--      This function just switches from the level_complete scene to the menu scene
 local function exitToMenu(event)
     if ("ended" == event.phase) then
         composer.gotoScene("menu")
@@ -45,6 +47,17 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen   
 
+    -- Game Background for level complete
+    local bgOptions = sheetName:getBgOptions()
+    local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
+    local bg = display.newImage (bgSheet, 4);
+
+    -- Text congratulating the player for winning!
+    local msg1 = display.newText("Congratulations! You defeated Janken!", display.contentCenterX, display.contentCenterY-(display.contentCenterY/1.1))
+    local msg2 = display.newText("Thanks for playing!", display.contentCenterX, display.contentCenterY-(display.contentCenterY/1.2))
+    local msg3 = display.newText("Credit for all sprites used:", display.contentCenterX, display.contentCenterY-(display.contentCenterY/2.2))
+
+    -- Creating the backToMenuButton button, sends us from the level_complete scene to the menu scene
     local backToMenuButton = widget.newButton({    
             id = "backToMenuButton",
             label = "Menu",    
@@ -56,11 +69,17 @@ function scene:create( event )
         } )   
 
     -- Positioning all objects on the screen
+    bg.x = display.contentWidth / 2;
+    bg.y= display.contentHeight / 2;
     backToMenuButton.x = display.contentCenterX
     backToMenuButton.y = display.contentCenterY+(display.contentCenterY/1.9)
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
+    sceneGroup:insert( bg )
+    sceneGroup:insert( msg1 )
+    sceneGroup:insert( msg2 )
+    sceneGroup:insert( msg3 )
     sceneGroup:insert( backToMenuButton )
     
 end
@@ -70,7 +89,7 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to the menu scene
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:show( event )
 
     local sceneGroup = self.view
