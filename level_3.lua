@@ -160,7 +160,7 @@ local function findWinner(player, enemy)
     if(alexScore == 3) then -- wins the round
         winner = "Alex";
         timer.cancel( startGameTimer )
-        native.showAlert("Winner!", "Go to next level", {"level complete"}, nextLevel)
+        native.showAlert("Winner!", "Go to credit scene", {"Game Complete"}, nextLevel)
     elseif (enemyScore == 3) then -- loses the round
         winner = "Enemy";
         timer.cancel( startGameTimer )
@@ -257,6 +257,9 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen  
  
+     -- Game Background Color
+    display.setDefault("background", 0, 0, 0)
+
     -- Game Background for level 3
     local bgOptions = sheetName:getBgOptions()
     local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
@@ -358,6 +361,7 @@ function scene:show( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+        updateScoreBoard()
         startCountdown()
         startGameTimer = timer.performWithDelay(100, checkStartGame, -1)
 

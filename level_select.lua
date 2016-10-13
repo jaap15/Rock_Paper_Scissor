@@ -147,10 +147,30 @@ function scene:create( event )
     scoreText = display.newText(" ", 0, 0, native.systemFont)
     scoreText:setTextColor(235, 235, 235)
 
-    -- Game Background
-    local menuBG = display.newImage("images/menuBG.jpg")
-    menuBG.width = display.contentWidth
-    menuBG.height = display.pixelWidth    
+    -- Setting up background clouds 6 clouds total
+    local cloud1 = display.newImage("images/menuClouds.png")
+    cloud1.width = display.contentWidth
+    cloud1.height = display.contentHeight
+
+    local cloud2 = display.newImage("images/menuClouds.png")
+    cloud2.width = display.contentWidth
+    cloud2.height = display.contentHeight
+
+    local cloud3 = display.newImage("images/menuClouds.png")
+    cloud3.width = display.contentWidth
+    cloud3.height = display.contentHeight
+
+    local cloud4 = display.newImage("images/menuClouds.png")
+    cloud4.width = display.contentWidth
+    cloud4.height = display.contentHeight
+
+    local cloud5 = display.newImage("images/menuClouds.png")
+    cloud5.width = display.contentWidth
+    cloud5.height = display.contentHeight
+
+    local cloud6 = display.newImage("images/menuClouds.png")
+    cloud6.width = display.contentWidth
+    cloud6.height = display.contentHeight 
 
     -- Creating the levelOneButton button, sends us from the level_select scene to the level_1 scene
     local levelOneButton = widget.newButton({    
@@ -196,9 +216,19 @@ function scene:create( event )
         onEvent = returnButtonEvent
     } )
 
-    -- Positioning all objects on the screen
-    menuBG.x = display.contentCenterX
-    menuBG.y = display.contentCenterY 
+    -- Positioning all objects on the screen 
+    cloud1.x = display.contentCenterX 
+    cloud1.y = display.contentHeight
+    cloud2.x = display.contentWidth
+    cloud2.y = display.contentCenterY
+    cloud3.x = display.contentCenterX
+    cloud3.y = display.contentCenterY - 150
+    cloud4.x = display.contentCenterX + 150
+    cloud4.y = display.contentCenterY + 150
+    cloud5.x = display.contentCenterX - 50
+    cloud5.y = display.contentCenterY
+    cloud6.x = display.contentCenterX + 175
+    cloud6.y = display.contentCenterY - 175
     levelOneButton.x = display.contentCenterX
     levelOneButton.y = display.contentCenterY - 50
     levelTwoButton.x = display.contentCenterX
@@ -211,7 +241,12 @@ function scene:create( event )
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
-    sceneGroup:insert( menuBG )
+    sceneGroup:insert( cloud1 )
+    sceneGroup:insert( cloud2 )
+    sceneGroup:insert( cloud3 )
+    sceneGroup:insert( cloud4 )
+    sceneGroup:insert( cloud5 )
+    sceneGroup:insert( cloud6 )
     sceneGroup:insert( levelOneButton )
     sceneGroup:insert( levelTwoButton )
     sceneGroup:insert( levelThreeButton )
@@ -233,6 +268,8 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        -- Setting Game Background color
+        display.setDefault("background", 0, 0, 1)
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

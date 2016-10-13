@@ -254,7 +254,10 @@ function scene:create( event )
 
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen  
- 
+    
+    -- Game Background Color
+    display.setDefault("background", 0, 0, 0)
+
     -- Game Background for level 1
     local bgOptions = sheetName:getBgOptions()
     local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
@@ -355,6 +358,7 @@ function scene:show( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+        updateScoreBoard()
         startCountdown()
         startGameTimer = timer.performWithDelay(100, checkStartGame, -1)
 

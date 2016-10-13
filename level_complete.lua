@@ -47,6 +47,9 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen   
 
+    -- Game Background Color
+    display.setDefault("background", 0, 0, 0)
+    
     -- Game Background for level complete
     local bgOptions = sheetName:getBgOptions()
     local bgSheet = graphics.newImageSheet( "images/bg.png", bgOptions );
